@@ -456,3 +456,43 @@
     justify-content: center;
     flex-wrap: wrap;
 }
+
+.upcoming-container {
+    display: flex;
+    
+}
+
+.left-head {
+    background-color: #f7a96e;
+    width:50%;
+    padding-top: 1rem ;
+    padding-bottom: 4rem;
+    padding-left:1rem;
+}
+
+.right-head {
+    background-color: #ff8177 ;
+    width:50%;
+    list-style-type: none;
+}
+
+.right-thing {
+    list-style-type: none;
+}
+
+.event-sub {
+    height: 3rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
+    border-bottom: #000000 solid 1px;
+    text-decoration: none;
+}
+
+.calendar img {
+    width:80%;
+    height: 80%;
+}
+
+.calendar {
+    display: flex;
+}
