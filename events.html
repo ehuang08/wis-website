@@ -1,0 +1,74 @@
+<!-- Build the HTML structure for the page:
+header, calendqr placeholder, event display area, filters/ navigation 
+
+Style the page minimally with CSS 
+
+Add accessibility to the page: sematic HTML, focusable elements,
+ARIA labels, and good color contrast 
+
+
+Begin with a basic HTML skeleton: header, main, footer 
+
+Add calendar placeholder 
+
+Add sample events elements: <ul> or <div> blocks 
+
+Add basic CSS for layout and readability 
+
+Review HTML for accessibility 
+
+Test keyboard navigation -->
+
+<!DOCTYPE html>
+<!-- set language to English -->
+<html lang="en">
+    <head>
+        <!-- UTF-8 common set that supports most characters and symbols -->
+        <meta charset="UTF-8" />
+        <!-- page will scale to device size -->
+        <!-- "veiwport" is the visible area of a web page-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+        <title>Event Calendar</title>
+        <link rel="stylesheet" href="styles.css">
+
+    </head>
+
+    <!-- below is visible content-->
+    <body>
+        <header>
+            <h1>Event Calendar</h1>
+            <!--nav auto sets role to navigation, 
+            aria-label="Main navigation" adds text label for screen reader-->
+            <nav aria-label="Main navigation">
+                <!--ul = unordered list, used as numbering/lettering not required-->
+                <ul>
+                    <!--this is to be used as a tag/hyperlink to calendar element, same for others-->
+                    <!--tabindex="0" make link keyboard accesible w/ tab-->
+                    <li><a href="#calendar" tabindex="0">Calendar</a></li>
+                    <li><a href="#events" tabindex="0">Events</a></li>
+                    <!--mentioned in last meeting if filters required/wanted-->
+                    <li><a href="#filters" tabindex="0">Filters</a></li>
+
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+        <!--placehoder for calendar, but id matches up so navigation link sends to this section-->
+        <section id="calendar" aria-label="Calendar view">
+            <h2>Calendar</h2>
+            <div class="calendar-placeholder" role="img" aria-label="Calendar placeholder"></div>
+
+        </section>
+        <!--another section for filters if wanted-->
+
+        <!--another section for events-->
+
+        </main>
+
+        <footer>
+            <p>WiS Event Calendar</p>
+        </footer>
+    </body>
+</html>
