@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events Page</title>
+
+  <style>
+    /* Basic styling just to make events readable */
+    body {
+      font-family: Arial, sans-serif; /* makes text cleaner */
+      margin: 40px;
+    }
+
+    .event {
+      /* Each event is in a "card-like" box */
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc; /* light gray border */
+      border-radius: 6px;     /* rounded corners */
+    }
+
+    .event-title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .event-date, .event-location {
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Upcoming Events</h1>
+
+  <!-- This is where the events will be inserted using JavaScript -->
+  <div id="events-container"></div>
+
+
+  <script>
+    const events = [
+      { title: "Python Workshop", date: "Nov 10", location: "Lincoln Hall Room 101" },
+      { title: "Lecture", date: "Nov 12", location: "Foellinger Auditorium" },
+      { title: "Hackathon Prep Meeting", date: "Nov 15", location: "CIF 3031" }
+    ];
+
+    function renderEvents() {
+        const container = document.getElementById("events-container");
+        events.forEach(event => {
+
+        // Step 3: Create a new <div> for each event. add the event class so it can be styled
+        const eventDiv = document.createElement("div");
+        eventDiv.classList.add("event"); 
+
+        // Step 4: Build the HTML inside the event card
+
+        eventDiv.innerHTML = `
+          <div class="event-title">${event.title}</div>
+          <div class="event-date">Date: ${event.date}</div>
+          <div class="event-location">Location: ${event.location}</div>
+        `;
+
+        // Step 5: Add the event's HTML to the container
+        container.appendChild(eventDiv);
+      });
+    }
+    renderEvents();
+  </script>
+
+</body>
+</html>
+
+
