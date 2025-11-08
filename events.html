@@ -1,35 +1,17 @@
-<!-- Build the HTML structure for the page:
-header, calendqr placeholder, event display area, filters/ navigation 
-
-Style the page minimally with CSS 
-
-Add accessibility to the page: sematic HTML, focusable elements,
-ARIA labels, and good color contrast 
-
-
-Begin with a basic HTML skeleton: header, main, footer 
-
-Add calendar placeholder 
-
-Add sample events elements: <ul> or <div> blocks 
-
-Add basic CSS for layout and readability 
-
-Review HTML for accessibility 
-
-Test keyboard navigation -->
-
 <!DOCTYPE html>
 <!-- set language to English -->
-<html lang="en">
+<html lang = "en_US">
     <head>
         <!-- UTF-8 common set that supports most characters and symbols -->
-        <meta charset="UTF-8" />
+        <meta charset="UTF-8">
         <!-- page will scale to device size -->
         <!-- "veiwport" is the visible area of a web page-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   
-        <title>Event Calendar</title>
+
+        <title>Events Page</title>
+        <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+
         <link rel="stylesheet" href="styles.css">
 
     </head>
@@ -37,38 +19,118 @@ Test keyboard navigation -->
     <!-- below is visible content-->
     <body>
         <header>
-            <h1>Event Calendar</h1>
             <!--nav auto sets role to navigation, 
             aria-label="Main navigation" adds text label for screen reader-->
-            <nav aria-label="Main navigation">
-                <!--ul = unordered list, used as numbering/lettering not required-->
-                <ul>
-                    <!--this is to be used as a tag/hyperlink to calendar element, same for others-->
-                    <!--tabindex="0" make link keyboard accesible w/ tab-->
-                    <li><a href="#calendar" tabindex="0">Calendar</a></li>
-                    <li><a href="#events" tabindex="0">Events</a></li>
-                    <!--mentioned in last meeting if filters required/wanted-->
-                    <li><a href="#filters" tabindex="0">Filters</a></li>
+            <nav class="navbar" aria-label="Main navigation">
+                <!--Container for navigation elements-->
+                <div class="navbar__container">
 
-                </ul>
+                    <!--logo links to homepage-->
+                    <a href="index.html" id="navbar__logo">WiS</a>
+
+                    <!--mobile menu toggle button-->
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar bar1"></span>
+                        <span class="bar bar2"></span>
+                        <span class="bar bar3"></span>
+                        <div class="flower-center"></div>
+                        <!--visual elems for the hamburger menu and decorative center-->
+                    </div>
+
+                    <!--ul = unordered list, used as numbering/lettering not required-->
+                    <ul class="navbar__menu">
+                        <!--tabindex="0" make link keyboard accesible w/ tab-->
+
+                        <!--navigation link to homepage-->
+                        <li class="navbar__item">
+                            <a href="index.html" class="navbar__links" tabindex="0">Home</a>
+                        </li>
+                        <!--navigation link to events page-->
+                        <li class="navbar__item">
+                            <a href="events.html" class="navbar__links" tabindex="0">Events</a> <!--Fixed link-->
+                        </li>
+                        <!--navigation link to blog-->
+                        <li class="navbar__item">
+                            <a href="/" class="navbar__links" tabindex="0">Blog</a>
+                        </li>
+                        <!--navigation link to sign up page-->
+                        <li class="navbar__btn">
+                            <a href="/"class="button" tabindex="0">Sign Up</a>
+                        </li>
+
+                    </ul>
+
+                </div>
             </nav>
         </header>
-
+        
         <main>
-        <!--placehoder for calendar, but id matches up so navigation link sends to this section-->
-        <section id="calendar" aria-label="Calendar view">
-            <h2>Calendar</h2>
-            <div class="calendar-placeholder" role="img" aria-label="Calendar placeholder"></div>
+            <!--container for upcoming events-->
+            <div class = "upcoming-container">
+                <!--heading will appear on the left-->
+                <div class = "left-head">
+                    <h1>Upcoming Events</h1>
+                </div>
+                <!--list of events on the right-->
+                <div class = "right-head">
+                    <ul class = "right-thing">
+                        <!--each list element is an event-->
+                        <li>
+                            <div class = "event-sub">
+                                <p><b>Women in Statistics Meeting</b> - XX/XX (Illini Union)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class = "event-sub">
+                                <p><b>Women in Statistics Meeting</b> - XX/XX (Illini Union)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class = "event-sub">
+                                <p><b>Women in Statistics Meeting</b> - XX/XX (Illini Union)</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--ceating a break into new section-->
+            <hr></hr>
 
-        </section>
-        <!--another section for filters if wanted-->
+            <!--container for calendar-->
+            <div class = "calendar">
+                <!--displays placeholder calendar img-->
+                <section id="calendar image" aria-label="Calendar view">
+                    <div class = "calendar-image">
+                        <img src="Calendar-PNG-Image-2292175568.png" alt="Dummy Calendar"/>
+                    </div>
+                </section>
 
-        <!--another section for events-->
-
+                <section id="filters" aria-label="Filter events">
+                    <div class = "calendar-filters">
+                        <h2>Filters</h2>
+                        <!--checkboxes for filters-->
+                        <div class="checkbox-wrapper-13">
+                            <input id="c1-13" type="checkbox">
+                            <label for="c1-13">Filter 1 - A</label>
+                        </div>
+                        <div class="checkbox-wrapper-13">
+                            <input id="c1-13" type="checkbox">
+                            <label for="c1-13">Filter 2 - B</label>
+                        </div>
+                        <div class="checkbox-wrapper-13">
+                            <input id="c1-13" type="checkbox">
+                            <label for="c1-13">Filter 3 - C</label>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </main>
 
         <footer>
             <p>WiS Event Calendar</p>
         </footer>
+
+        <!--links to js file-->
+        <script src="app.js"></script>
     </body>
 </html>
