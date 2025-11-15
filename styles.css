@@ -8,6 +8,59 @@
     font-family: 'Satisfy', cursive;
 }
 
+a:focus,
+button:focus,
+input:focus {
+  outline: 2px solid #005fcc;
+  outline-offset: 2px;
+}
+
+/* Apply Marcellus font to event text */
+.event-title,
+.event-data,
+.event-location {
+    font-family: 'Marcellus', serif;
+}
+
+
+h1, h2, h3 {
+    font-family: 'Marcellus', serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* full viewport height */
+}
+
+.site-footer {
+    margin-top: auto;  /* pushes footer to bottom */
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 0.3rem;
+}
+
+#modal-overlay {
+    z-index: 2000; /* ensure overlay is above navbar/footer */
+}
+
+#event-modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    outline: none;
+    color: black; /* force text to be visible */
+}
+
+#event-modal h2,
+#event-modal p {
+    color: black; /* make sure text is readable */
+}
+
+
+
 .navbar {
     background: #000000;
     height: 80px;
@@ -162,6 +215,9 @@
     }
 
     #mobile-menu {
+        background: none;
+        border: none;
+
         position: absolute;
         top: 20%;
         right: 5%;
@@ -475,6 +531,7 @@
 .right-head {
     background-color: #ff8177 ;
     width:50%;
+    /*padding: 1rem;*/
     list-style-type: none;
 }
 
@@ -483,26 +540,80 @@
 }
 
 .event-sub {
-    height: 4rem;
-    padding-left: 1rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: #000000 solid 1px;
-    text-decoration: none;
+    display: flex;
+    gap: 1rem;
+    align-items: center;   /* vertical centering */
+    padding: 0.5rem 1rem;       /* horizontal padding only */
+    border-bottom: 1px solid #000;
+    height: 4rem;          /* keep fixed height if you like */
+}
+
+.event-sub:hover {
+    background-color: #ffb6c1; /* hover effect */
+}
+
+.event-title {
+    font-family: 'Marcellus', serif;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.event-data, .event-location {
+    margin-top: 4px;
+    font-size: 14px;
+}
+
+/* modal background overlay */
+#modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5); /* transparent background */
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+#event-modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    outline: none;
+}
+
+#close-btn {
+    margin-top: 12px;
+    padding: 8px;
+    background-color: #444;
+    color: white;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+
+.calendar-image {
+  flex: 2 1 0;
+  width: 100%;
 }
 
 .calendar img {
     /*width:80%;
     height: 80%;
     position:relative;*/
-    max-width: 100%;
+    width: 100%;
     height: auto;
-    flex: 2;
+    display: block;
+    /*flex: none;*/
 }
 
 .calendar {
     display: flex;
-    flex-wrap: nowrap; /*filters will stay on right side*/
+    flex-wrap: wrap; /*filters will stay on right side*/
     gap: 2rem;
     justify-content: space-between;
     align-items: flex-start;
