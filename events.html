@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<!-- set language to English -->
+<html lang = "en_US">
+    <head>
+        <!-- UTF-8 common set that supports most characters and symbols -->
+        <meta charset="UTF-8">
+        <!-- page will scale to device size -->
+        <!-- "veiwport" is the visible area of a web page-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Events Page</title>
+        <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="styles.css">
+
+    </head>
+
+    <!-- below is visible content-->
+    <body>
+        <header>
+            <!--nav auto sets role to navigation, 
+            aria-label="Main navigation" adds text label for screen reader-->
+            <nav class="navbar" aria-label="Main navigation">
+                <!--Container for navigation elements-->
+                <div class="navbar__container">
+
+                    <!--logo links to homepage-->
+                    <a href="index.html" id="navbar__logo">WiS</a>
+
+                    <!--mobile menu toggle button-->
+                    <!--previously div, now button to ensure interactiveness-->
+                    <button class="navbar__toggle" id="mobile-menu"  aria-controls="navbar__menu" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="bar bar1"></span>
+                        <span class="bar bar2"></span>
+                        <span class="bar bar3"></span>
+                        <div class="flower-center"></div>
+                        <!--visual elems for the hamburger menu and decorative center-->
+                    </button>
+
+                    <!--ul = unordered list, used as numbering/lettering not required-->
+                    <ul class="navbar__menu">
+                        <!--tabindex="0" make link keyboard accesible w/ tab-->
+
+                        <!--navigation link to homepage-->
+                        <li class="navbar__item">
+                            <a href="index.html" class="navbar__links" tabindex="0">Home</a>
+                        </li>
+                        <!--navigation link to events page-->
+                        <li class="navbar__item">
+                            <a href="events.html" class="navbar__links" tabindex="0">Events</a> <!--Fixed link-->
+                        </li>
+                        <!--navigation link to blog-->
+                        <li class="navbar__item">
+                            <a href="/" class="navbar__links" tabindex="0">Blog</a>
+                        </li>
+                        <!--navigation link to sign up page-->
+                        <li class="navbar__btn">
+                            <a href="/"class="button" tabindex="0">Sign Up</a>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </nav>
+        </header>
+        
+        <main>
+            <!--container for upcoming events-->
+            <div class = "upcoming-container">
+                <!--heading will appear on the left-->
+                <div class = "left-head">
+                    <h1>Upcoming Events</h1>
+                </div>
+                <!--list of events on the right-->
+                <div class = "right-head">
+                    <ul class = "right-thing" role="list">
+                        <!--each list element is an event-->
+                        <li role="listitem">
+                            <div class = "event-sub" tabindex="0" role="button">
+                                <span class="event-title">Women in Statistics Meeting</span>
+                                <span class="event-data">Date: XX/XX</span>
+                                <span class="event-location">Location: Illini Union</span>
+                            </div>
+                        </li>
+                        <li role="listitem">
+                            <div class = "event-sub" tabindex="0" role="button">
+                                <span class="event-title">Women in Statistics Meeting</span>
+                                <span class="event-data">Date: XX/XX</span>
+                                <span class="event-location">Location: Illini Union</span>
+                            </div>
+                        </li>
+                        <li role="listitem" >
+                            <div class = "event-sub" tabindex="0" role="button">
+                                <span class="event-title">Women in Statistics Meeting</span>
+                                <span class="event-data">Date: XX/XX</span>
+                                <span class="event-location">Location: Illini Union</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!--ceating a break into new section-->
+            <hr></hr>
+
+            <!--container for calendar-->
+            <div class = "calendar">
+                <!--displays placeholder calendar img-->
+                <section id="calendar image" aria-label="Calendar view">
+                    <div class = "calendar-image">
+                        <img src="Calendar-PNG-Image-2292175568.png" alt="Dummy Calendar"/>
+                    </div>
+                </section>
+
+                <section id="filters" aria-label="Filter events">
+                    <div class = "calendar-filters">
+                        <h2>Filters</h2>
+                        <!--checkboxes for filters-->
+                        <div class="checkbox-wrapper-13">
+                            <input id="filter-a" type="checkbox">
+                            <label for="filter-a">Filter 1 - A</label>
+                        </div>
+                        <div class="checkbox-wrapper-13">
+                            <input id="filter-b" type="checkbox">
+                            <label for="filter-b">Filter 2 - B</label>
+                        </div>
+                        <div class="checkbox-wrapper-13">
+                            <input id="filter-c" type="checkbox">
+                            <label for="filter-c">Filter 3 - C</label>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <p>WiS Event Calendar</p>
+        </footer>
+
+        <!-- Modal overlay -->
+        <!--role tells tech implemented that its a modal dialog-->
+        <!--aria-modal tells screen readers the content is inactive-->
+        <!--labelledby linke the modal tp heading-->
+        <!--hidden which switch upon interaction-->
+        <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+            <div id="event-modal">
+                <h2 id="modal-title" class="event-title">Event Details</h2>
+                <p class="event-data">Date: XX/XX</p>
+                <p class="event-location">Location: Illini Union</p>
+                <button id="close-btn">Close</button>
+            </div>
+        </div>
+
+        <!--links to js file-->
+        <script src="app.js"></script>
+    </body>
+</html>
