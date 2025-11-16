@@ -62,22 +62,34 @@
         </div>
         <hr></hr>
         <div class = "calendar">
-            <div>
-                <img src="Calendar-PNG-Image-2292175568.png" alt="Dummy Calendar"/>
+            <div class = "filterable_cards">
+                <div class="block" data-name="GenMeet">
+                    <p>General Meeting</p>
+                    <p>11/16/25, Illini Union</p>
+                </div>
+                <div class="block" data-name="GenMeet">
+                    <p>General Meeting</p>
+                    <p>11/18/25, Illini Union</p>
+                </div>
+                <div class="block" data-name="Fund">
+                    <p>Fundraiser</p>
+                    <p>11/16/25, Illini Union</p>
+                </div>
             </div>
+            
             <div class = "calendar-filters">
                 <h2>Filters</h2>
                 <div class="checkbox-wrapper-13">
-                    <input id="c1-13" type="checkbox">
-                    <label for="c1-13">Filter 1 - A</label>
+                    <input class = "active" data-name="all" id="c1-13" type="checkbox">
+                    <label for="c1-13">All</label>
                 </div>
                 <div class="checkbox-wrapper-13">
-                    <input id="c1-13" type="checkbox">
-                    <label for="c1-13">Filter 2 - B</label>
+                    <input class = "filter" data-name="Fund" id="c1-13" type="checkbox">
+                    <label for="c1-13">Fundraisers</label>
                 </div>
                 <div class="checkbox-wrapper-13">
-                    <input id="c1-13" type="checkbox">
-                    <label for="c1-13">Filter 3 - C</label>
+                    <input class = "filter" data-name="GenMeet" id="c1-13" type="checkbox">
+                    <label for="c1-13">General Meetings</label>
                 </div>
             </div>
         </div>

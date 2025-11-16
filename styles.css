@@ -491,11 +491,13 @@
     text-decoration: none;
 }
 
-.calendar img {
-    width:80%;
+.filterable_cards {
+    width:50%;
     height: 80%;
     position:relative;
 }
+
+
 
 .calendar {
     display: flex;
@@ -505,10 +507,10 @@
     background-color: black;
     color:white;
     position:relative;
-    margin-left: -100px;
     margin-right: 1rem;
-    margin-top: 100px;
-    width:80%;
+    margin-top: 25px;
+    margin-left: 1rem;
+    width:50%;
     height:10rem;
     border-radius: 1rem;
     text-align: center;
@@ -617,3 +619,16 @@
   .checkbox-wrapper-13 *:after {
     box-sizing: inherit;
   }
+
+.block {
+    flex-basis: 300px;
+    background-color: #BBC1E1;
+    padding:3px;
+    border-radius: 8px ;
+    margin-top: 1rem;
+    font-size: large;
+  }
+
+.hide {
+    display: none;
+ }
