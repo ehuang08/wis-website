@@ -42,17 +42,25 @@ fetch('https://api.sheetbest.com/sheets/96fd77ef-7967-42e7-994f-dfbae7a94e47')
       li.setAttribute("role", "listitem");
 
       li.innerHTML = `
-        <div class = "event-sub" tabindex="0" role="button">
+        <div class="event-sub" tabindex="0" role="button">
             <span class="event-title">${event.name}</span>
             <span class="event-data">Date: ${event.date}</span>
             <span class="event-location">Location: ${event.location}</span>
         </div>
       `;
-      upcomingList.appendChild(li);
-    });
 
-    attachModalListener();
+      // ARIA additions
+      const eventSub = li.querySelector(".event-sub");
+      eventSub.setAttribute("aria-haspopup", "dialog");
+      eventSub.setAttribute("aria-controls", "modal-overlay");
+      eventSub.setAttribute(
+        "aria-label",
+        `${event.name}, happening on ${event.date} at ${event.location}`
+      );
+
+      upcomingList.appendChild(li);
 });
+
 
 function attachModalListener() {
   const modalOverlay = document.getElementById("modal-overlay");
@@ -106,6 +114,7 @@ const menuLinks = document.querySelector('.navbar__menu');
 /*adding new objects*/
 const navItems = menuLinks.querySelectorAll('a, button');
 const closeBtn = document.getElementById('close-btn');
+closeBtn.setAttribute("aria-label", "Close event details");
 
 // const events = document.querySelectorAll('.event-sub');
 // const modalOverlay = document.getElementById('modal-overlay');
