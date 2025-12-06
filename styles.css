@@ -749,3 +749,13 @@ body {
   .checkbox-wrapper-13 *:after {
     box-sizing: inherit;
   }
+
+.cards {
+    width:45vw;
+    height:8rem;
+    border: 2px solid #000000;
+    margin: 1rem 0.5rem 0 0.5rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
+    border-radius: 5%;
+}
