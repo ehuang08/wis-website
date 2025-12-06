@@ -27,6 +27,79 @@ fetch('https://api.sheetbest.com/sheets/96fd77ef-7967-42e7-994f-dfbae7a94e47')
     }
 });
 
+//added to dynamically fill in upcoming events section
+fetch('https://api.sheetbest.com/sheets/96fd77ef-7967-42e7-994f-dfbae7a94e47')
+.then(response => response.json())
+.then(data => {
+    const upcomingList = document.querySelector(".right-thing");
+    upcomingList.innerHTML = " ";
+    
+    //pulling first 3 events
+    const topEvents = data.slice(0, 3);
+
+    topEvents.forEach(event => {
+      const li = document.createElement("li");
+      li.setAttribute("role", "listitem");
+
+      li.innerHTML = `
+        <div class = "event-sub" tabindex="0" role="button">
+            <span class="event-title">${event.name}</span>
+            <span class="event-data">Date: ${event.date}</span>
+            <span class="event-location">Location: ${event.location}</span>
+        </div>
+      `;
+      upcomingList.appendChild(li);
+    });
+
+    attachModalListener();
+});
+
+function attachModalListener() {
+  const modalOverlay = document.getElementById("modal-overlay");
+  const modalTitle = document.querySelector("#event-modal .event-title");
+  const modalDate = document.querySelector("#event-modal .event-data");
+  const modalLocation = document.querySelector("#event-modal .event-location");
+  const closeBtn = document.getElementById("close-btn");
+
+  document.querySelectorAll(".event-sub").forEach(eventItem => {
+    eventItem.addEventListener("click", () => {
+      modalTitle.textContent = eventItem.querySelector(".event-title").textContent;
+      modalDate.textContent = eventItem.querySelector(".event-data").textContent;
+      modalLocation.textContent = eventItem.querySelector(".event-location").textContent;
+
+      modalOverlay.style.display = "flex";
+      modalOverlay.setAttribute("aria-hidden", "false");
+      closeBtn.focus();
+    });
+
+    eventItem.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        eventItem.click();
+      }
+    });
+  });
+
+  closeBtn.addEventListener("click", () => {
+    modalOverlay.style.display = "none";
+    modalOverlay.setAttribute("aria-hidden", "true");
+  });
+  
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      modalOverlay.style.display = "none";
+      modalOverlay.setAttribute("aria-hidden", "true");
+    }
+  });
+
+  modalOverlay.addEventListener("click", e => {
+    if (e.target === modalOverlay) {
+      modalOverlay.style.display = "none";
+      modalOverlay.setAttribute("aria-hidden", "true");
+    }
+  });
+}
+
 const mobileMenu = document.getElementById('mobile-menu');
 const menuLinks = document.querySelector('.navbar__menu');
 
@@ -34,9 +107,9 @@ const menuLinks = document.querySelector('.navbar__menu');
 const navItems = menuLinks.querySelectorAll('a, button');
 const closeBtn = document.getElementById('close-btn');
 
-const events = document.querySelectorAll('.event-sub');
-const modalOverlay = document.getElementById('modal-overlay');
-const modal = document.getElementById('event-modal');
+// const events = document.querySelectorAll('.event-sub');
+// const modalOverlay = document.getElementById('modal-overlay');
+// const modal = document.getElementById('event-modal');
 
 /*MENU SECTION*/
 function openMenu() {
@@ -84,45 +157,45 @@ document.addEventListener('keydown', (e) => {
 });
 
 
-/*MODAL SECTION*/
+// /*MODAL SECTION*/
 
-/*keep? YES*/
-//opens modal
-function openModal() {
-    modalOverlay.style.display = 'flex';
-    modalOverlay.setAttribute('aria-hidden', 'false');
-    closeBtn.focus();
-    trapFocus(modal);
-}
+// /*keep? YES*/
+// //opens modal
+// function openModal() {
+//     modalOverlay.style.display = 'flex';
+//     modalOverlay.setAttribute('aria-hidden', 'false');
+//     closeBtn.focus();
+//     trapFocus(modal);
+// }
 
-/* adding aria label for screen readers*/
-function closeModal() {
-    modalOverlay.style.display = 'none';
-    modalOverlay.setAttribute('aria-hidden', 'true');
-}
+// /* adding aria label for screen readers*/
+// function closeModal() {
+//     modalOverlay.style.display = 'none';
+//     modalOverlay.setAttribute('aria-hidden', 'true');
+// }
 
-events.forEach(eventItem => {
-    eventItem.setAttribute('tabindex', '0');
-    eventItem.setAttribute('role', 'button');
-    eventItem.addEventListener('click', openModal);
+// events.forEach(eventItem => {
+//     eventItem.setAttribute('tabindex', '0');
+//     eventItem.setAttribute('role', 'button');
+//     eventItem.addEventListener('click', openModal);
 
-    eventItem.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            openModal();
-        }
-    });
-});
+//     eventItem.addEventListener('keydown', (e) => {
+//         if (e.key === 'Enter' || e.key === ' ') {
+//             e.preventDefault();
+//             openModal();
+//         }
+//     });
+// });
 
-closeBtn.addEventListener('click', closeModal);
+// closeBtn.addEventListener('click', closeModal);
 
 
-/*Escape button implementation*/ 
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeModal();
-    }
-});
+// /*Escape button implementation*/ 
+// document.addEventListener('keydown', (e) => {
+//     if (e.key === 'Escape') {
+//         closeModal();
+//     }
+// });
 
 //got help from AI --> traps selecting ability into modal when open instead of having to navigate through all options
 function trapFocus(element) {
@@ -151,24 +224,24 @@ function trapFocus(element) {
   });
 }
 
-document.querySelectorAll('.event-sub').forEach(eventItem => {
-    eventItem.addEventListener('click', () => {
-        document.getElementById('modal-overlay').style.display = 'flex';
-    });
-});
+// document.querySelectorAll('.event-sub').forEach(eventItem => {
+//     eventItem.addEventListener('click', () => {
+//         document.getElementById('modal-overlay').style.display = 'flex';
+//     });
+// });
 
-document.getElementById('close-btn').addEventListener('click', () => {
-    document.getElementById('modal-overlay').style.display = 'none';
-});
+// document.getElementById('close-btn').addEventListener('click', () => {
+//     document.getElementById('modal-overlay').style.display = 'none';
+// });
 
 
-eventSubs.forEach(eventItem => {
-    eventItem.addEventListener('click', openModal);
-    eventItem.setAttribute('tabindex', '0');
-    eventItem.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            openModal();
-        }
-    });
-});
+// eventSubs.forEach(eventItem => {
+//     eventItem.addEventListener('click', openModal);
+//     eventItem.setAttribute('tabindex', '0');
+//     eventItem.addEventListener('keydown', (e) => {
+//         if (e.key === 'Enter' || e.key === ' ') {
+//             openModal();
+//         }
+//     });
+// });
 
