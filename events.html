@@ -14,6 +14,12 @@
 
         <link rel="stylesheet" href="styles.css">
 
+        <!--loads google API client library (for calendar)-->
+        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.8/index.global.min.js"></script>
+
+
     </head>
 
     <!-- below is visible content-->
@@ -105,8 +111,15 @@
             <!--ceating a break into new section-->
             <hr></hr>
 
+            
+
+
             <!--container for calendar-->
             <div class = "calendar">
+
+                 <!-- Google Calendar Events Will Appear Here -->
+                <div id="club-calendar"></div>
+
                 <div id = "output">
                 </div>
 

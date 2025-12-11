@@ -525,9 +525,9 @@ body {
 .left-head {
     background-color: #2d1b47;
     width:50%;
-    padding-top: 3rem ;
-    padding-bottom: 3rem;
-    padding-left:1rem;
+    padding-top: 4rem ;
+    padding-bottom: 1rem;
+    /*padding-left:1rem;*/
     text-align: center;
     font-size: larger;
     color: white
@@ -569,13 +569,13 @@ body {
 
 .event-title {
     font-family: 'Marcellus', serif;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
 }
 
 .event-data, .event-location {
     margin-top: 4px;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 /* modal background overlay */
@@ -761,6 +761,13 @@ body {
     box-sizing: inherit;
   }
 
+#club-calendar {
+    flex: 3;              /* calendar takes more space than filters */
+    min-width: 600px;     /* ensures it doesn’t collapse */
+    height: 700px;        /* makes the calendar taller */
+}
+
+
 .cards {
     width:45vw;
     height:8rem;
@@ -770,3 +777,4 @@ body {
     padding-top: 1rem;
     border-radius: 5%;
 }
+
