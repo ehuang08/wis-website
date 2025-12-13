@@ -48,6 +48,7 @@ fetch('https://api.sheetbest.com/sheets/96fd77ef-7967-42e7-994f-dfbae7a94e47')
             <span class="event-location">Location: ${event.location}</span>
         </div>
       `;
+      
 
       // ARIA additions
       const eventSub = li.querySelector(".event-sub");
@@ -59,6 +60,9 @@ fetch('https://api.sheetbest.com/sheets/96fd77ef-7967-42e7-994f-dfbae7a94e47')
       );
 
       upcomingList.appendChild(li);
+      
+    
+});
 });
 
 
@@ -163,6 +167,7 @@ document.addEventListener('keydown', (e) => {
     closeMenu();
     mobileMenu.focus(); // return focus to toggle button
   }
+
 });
 
 
