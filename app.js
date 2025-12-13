@@ -19,7 +19,21 @@ document.addEventListener('DOMContentLoaded', function () {
     headerToolbar: { 
       left: 'prev,next today', 
       center: 'title', 
-      right: 'dayGridMonth,timeGridWeek,timeGridDay' } 
+      right: 'dayGridMonth,timeGridWeek,timeGridDay' 
+    },
+    eventClick: function(info) {
+      info.jsEvent.preventDefault();
+      const modalOverlay = document.getElementById("modal-overlay");
+      const modalTitle = document.querySelector("#event-modal .event-title");
+      const modalDate = document.querySelector("#event-modal .event-data");
+      const modalLocation = document.querySelector("#event-modal .event-location");
+      modalTitle.textContent = info.event.title;
+      modalDate.textContent = "Date: " + info.event.start.toLocaleString();
+      modalLocation.textContent = "Location: " + (info.event.extendedProps.location || "TBD");
+      modalOverlay.style.display = "flex";
+      modalOverlay.setAttribute("aria-hidden", "false");
+    }
+
     }); calendar.render(); }); 
     // 
 async function loadCalendarEvents() { 
