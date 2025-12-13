@@ -611,6 +611,11 @@ body {
     border-radius: 4px;
     font-size: 16px;
     transition: 0.2s;
+    background-color:#9b59b6 
+}
+
+#close-btn:hover {
+    background-color: #2d1b47
 }
 
 

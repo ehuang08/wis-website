@@ -22,14 +22,14 @@ document.addEventListener('DOMContentLoaded', function () {
       right: 'dayGridMonth,timeGridWeek,timeGridDay' 
     },
     eventClick: function(info) {
-      info.jsEvent.preventDefault();
+      info.jsEvent.preventDefault(); // prevents it from going to gcal
       const modalOverlay = document.getElementById("modal-overlay");
       const modalTitle = document.querySelector("#event-modal .event-title");
       const modalDate = document.querySelector("#event-modal .event-data");
-      const modalLocation = document.querySelector("#event-modal .event-location");
+      const modalLocation = document.querySelector("#event-modal .event-location"); // getting modal elements
       modalTitle.textContent = info.event.title;
       modalDate.textContent = "Date: " + info.event.start.toLocaleString();
-      modalLocation.textContent = "Location: " + (info.event.extendedProps.location || "TBD");
+      modalLocation.textContent = "Location: " + (info.event.extendedProps.location || "TBD"); // show event location, tbd if not available
       modalOverlay.style.display = "flex";
       modalOverlay.setAttribute("aria-hidden", "false");
     }
