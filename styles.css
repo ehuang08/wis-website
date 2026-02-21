@@ -519,22 +519,24 @@ body {
 
 .upcoming-container {
     display: flex;
+    flex-direction: column;
+    padding-bottom: 4rem;
     
 }
 
 .left-head {
     background-color: #2d1b47;
-    width:50%;
-    padding-top: 4rem ;
-    padding-bottom: 1rem;
-    /*padding-left:1rem;*/
-    text-align: center;
+    width: 100%;             
+    padding: 2rem 0;
+    text-align: center;      
     font-size: larger;
-    color: white
+    color: white;
 }
 
+
+
 .right-head {
-    background-color: #ff8177 ;
+    background-color: #2d1b47 ;
     width:50%;
     /*padding: 1rem;*/
     list-style-type: none;
@@ -766,4 +768,53 @@ body {
 
 .dropdown:hover button {
     background-color: #d87393;
+}
+
+
+/* Purple header block */
+.upcoming-header {
+    background-color: #2d1b47;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.upcoming-header h1 {
+    color: white;
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+/* Grid layout */
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 3rem auto 0 auto;
+    padding: 0 2rem;
+}
+
+/* Card styling */
+.event-card {
+    background-color: #9b59b6;
+    padding: 2rem;
+    border-radius: 16px;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+
+.event-btn {
+    margin-top: auto;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #d87393;
+    color: #2d1b47;
+    font-weight: bold;
+    cursor: pointer;
 }
