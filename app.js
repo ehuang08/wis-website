@@ -8,24 +8,49 @@ menu.addEventListener('click', function() {
     menuLinks.classList.toggle('active');
 })
 */
-
-fetch('https://api.sheetbest.com/sheets/96fd77ef-7967-42e7-994f-dfbae7a94e47')
-.then(response => response.json())
-.then(data => {
-    console.log(data);
-    if(data.length > 0) {
-        var disp = "";
-        data.forEach((u) =>{
-            disp += "<div class = 'cards'>"
-            disp += "<h1>" + u.name + "</h1>"
-            disp += "<h2>" + u.location + "</h2>"
-            disp += "<h2>" + u.date + "</h2>"
-            disp += "</div>"
-        })
-
-        document.getElementById("output").innerHTML = disp;
+//adding the actual calendar 
+const API_KEY = "AIzaSyBWXY7wclp0Gfw4cQY1CCRaY530LrcRUqg"; 
+document.addEventListener('DOMContentLoaded', function () { 
+  const calendarEl = document.getElementById('club-calendar'); 
+  const calendar = new FullCalendar.Calendar(calendarEl, { 
+    initialView: 'dayGridMonth', 
+    googleCalendarApiKey: 'AIzaSyBWXY7wclp0Gfw4cQY1CCRaY530LrcRUqg', 
+    events: { googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com' }, 
+    headerToolbar: { 
+      left: 'prev,next today', 
+      center: 'title', 
+      right: 'dayGridMonth,timeGridWeek,timeGridDay' 
+    },
+    eventClick: function(info) {
+      info.jsEvent.preventDefault(); // prevents it from going to gcal
+      const modalOverlay = document.getElementById("modal-overlay");
+      const modalTitle = document.querySelector("#event-modal .event-title");
+      const modalDate = document.querySelector("#event-modal .event-data");
+      const modalLocation = document.querySelector("#event-modal .event-location"); // getting modal elements
+      modalTitle.textContent = info.event.title;
+      modalDate.textContent = "Date: " + info.event.start.toLocaleString();
+      modalLocation.textContent = "Location: " + (info.event.extendedProps.location || "TBD"); // show event location, tbd if not available
+      modalOverlay.style.display = "flex";
+      modalOverlay.setAttribute("aria-hidden", "false");
     }
-});
+
+    }); calendar.render(); }); 
+    // 
+async function loadCalendarEvents() { 
+  const response = await gapi.client.calendar.events.list({ 
+    calendarId: "primary", 
+    maxResults: 10, 
+    singleEvents: true, 
+    orderBy: "startTime" 
+  }); 
+  const events = response.result.items; 
+  const container = document.getElementById("calendar"); 
+  container.innerHTML = "<h2>Your Upcoming Events</h2>"; 
+  events.forEach(event => { 
+    const start = event.start.dateTime || event.start.date; 
+    container.innerHTML += `<p>${start} — ${event.summary}</p>`; 
+  }); 
+}
 
 //added to dynamically fill in upcoming events section
 fetch('https://api.sheetbest.com/sheets/96fd77ef-7967-42e7-994f-dfbae7a94e47')
@@ -60,6 +85,9 @@ fetch('https://api.sheetbest.com/sheets/96fd77ef-7967-42e7-994f-dfbae7a94e47')
 
       upcomingList.appendChild(li);
 });
+attachModalListener();
+
+})
 
 
 function attachModalListener() {
@@ -68,6 +96,8 @@ function attachModalListener() {
   const modalDate = document.querySelector("#event-modal .event-data");
   const modalLocation = document.querySelector("#event-modal .event-location");
   const closeBtn = document.getElementById("close-btn");
+  closeBtn.setAttribute("aria-label", "Close event details");
+
 
   document.querySelectorAll(".event-sub").forEach(eventItem => {
     eventItem.addEventListener("click", () => {
@@ -113,8 +143,8 @@ const menuLinks = document.querySelector('.navbar__menu');
 
 /*adding new objects*/
 const navItems = menuLinks.querySelectorAll('a, button');
-const closeBtn = document.getElementById('close-btn');
-closeBtn.setAttribute("aria-label", "Close event details");
+//const closeBtn = document.getElementById('close-btn');
+//closeBtn.setAttribute("aria-label", "Close event details");
 
 // const events = document.querySelectorAll('.event-sub');
 // const modalOverlay = document.getElementById('modal-overlay');
@@ -253,4 +283,9 @@ function trapFocus(element) {
 //         }
 //     });
 // });
+
+
+/*
+
+*/
 
