@@ -15,13 +15,27 @@ document.addEventListener('DOMContentLoaded', function () {
   const calendar = new FullCalendar.Calendar(calendarEl, { 
     initialView: 'dayGridMonth', 
     googleCalendarApiKey: 'AIzaSyBWXY7wclp0Gfw4cQY1CCRaY530LrcRUqg', 
-    events: { googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com' }, 
+    events: { 
+      //googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com' }, 
+      googleCalendarId: 'dfac00fa816c1db1e9e3363bb1ee8af7159ba8ee4c6eb711ae21d3f7eef8dde0@group.calendar.google.com' },
     headerToolbar: { 
       left: 'prev,next today', 
       center: 'title', 
-      right: 'dayGridMonth,timeGridWeek,timeGridDay' } 
-    }); calendar.render(); }); 
-    // 
+      right: 'dayGridMonth,timeGridWeek,timeGridDay' 
+    },
+      
+      //new funciton to implement that will send info of events to cards
+      // eventsSet(events) {
+      //   updateUpcomingCards(events);
+      // }
+    }); 
+
+    calendar.render(); 
+
+  }); 
+  
+
+
 async function loadCalendarEvents() { 
   const response = await gapi.client.calendar.events.list({ 
     calendarId: "primary", 
