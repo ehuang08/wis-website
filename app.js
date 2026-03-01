@@ -23,96 +23,72 @@ const activeFilters = {
 };
 
 //button listeners, so each button is linked to an action
-document.querySelectorAll(".filter-option").forEach (btn => {
-  btn.addEventListener("click", () => {
-    //which filter
-    const group = btn.dataset.filterGroup;
-    //which choice in the filter
-    const value = btn.dataset.filterVal;
-
-    activeFilters[group] = value;
-
-    if (window.clubCalendar) {
-      window.clubCalendar.refetchEvents(); //part of Full Calendar
-      //tells it to relaod all events, not the page --> all my functions in the listener are recalled/called
-    }
-  });
-});
-
-// calendar loading
 document.addEventListener('DOMContentLoaded', function () { 
   const calendarEl = document.getElementById('club-calendar'); 
 
-  const calendar = new FullCalendar.Calendar(calendarEl, { 
-      initialView: 'dayGridMonth', 
-      googleCalendarApiKey: API_KEY,
+const calendar = new FullCalendar.Calendar(calendarEl, { 
+  initialView: 'dayGridMonth', 
+  googleCalendarApiKey: API_KEY,
 
-      events: { 
-        googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com'
-      },
+  events: { 
+    googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com'
+  },
 
-      headerToolbar: { 
-        left: 'prev,next today', 
-        center: 'title', 
-        right: 'dayGridMonth,timeGridWeek,timeGridDay' 
-      },
+  headerToolbar: { 
+    left: 'prev,next today', 
+    center: 'title', 
+    right: 'dayGridMonth,timeGridWeek,timeGridDay' 
+  },
 
-      //needed to use AI here, was very lost on why it wasn't parsing correctly
-      // apparently lots of hidden characters and wierd spaccing issues
-    
-      //after reading parsed info, if event not relevant to the filter choice hides it in calendar
-      eventDidMount(info) {
-        //storing val, using the google cal and full calender properties
-      const eventType = info.event.extendedProps.type || "none";
-      const eventCommittee = info.event.extendedProps.committee || "none";
+  //needed to use AI here, was very lost on why it wasn't parsing correctly
+  // apparently lots of hidden characters and wierd spaccing issues
+  eventDidMount(info) {
+    const eventType = info.event.extendedProps.type || "none";
+    const eventCommittee = info.event.extendedProps.committee || "none";
 
-      const typeMatch =
-        activeFilters.type === "all" || activeFilters.type === eventType;
+    const typeMatch =
+      activeFilters.type === "all" || activeFilters.type === eventType;
 
-      const committeeMatch =
-        activeFilters.committee === "all" || activeFilters.committee === eventCommittee;
+    const committeeMatch =
+      activeFilters.committee === "all" || activeFilters.committee === eventCommittee;
 
-      if (!typeMatch || !committeeMatch) {
-        info.el.style.display = "none";
-      }
-    },
-
-    //moved the parsing into its own function, for better organization
-    //it runs through teh description of the event and pulls out info relevant to the filters
+    if (!typeMatch || !committeeMatch) {
+      info.el.style.display = "none";
+    }
+  },
     eventDataTransform(raw) {
-      if (raw.description) {
-        let clean = raw.description
-          .replace(/<\/?pre>/gi, "")
-          .replace(/<br[^>]*>/gi, "\n")
-          .replace(/\r/g, "")
-          .trim();
+    if (raw.description) {
+      let clean = raw.description
+        .replace(/<\/?pre>/gi, "")
+        .replace(/<br[^>]*>/gi, "\n")
+        .replace(/\r/g, "")
+        .trim();
 
-        const lines = clean.split("\n");
+      const lines = clean.split("\n");
 
-        lines.forEach(line => {
-          let normalized = line.trim()
-            .replace(/\u200B/g, "")
-            .replace(/\uFEFF/g, "")
-            .replace(/\u00A0/g, " ");
+      lines.forEach(line => {
+        let normalized = line.trim()
+          .replace(/\u200B/g, "")
+          .replace(/\uFEFF/g, "")
+          .replace(/\u00A0/g, " ");
 
-          if (normalized.startsWith("Type:")) {
-            raw.type = normalized.replace("Type:", "").trim();
-          }
+        if (normalized.startsWith("Type:")) {
+          raw.type = normalized.replace("Type:", "").trim();
+        }
 
-          if (normalized.startsWith("Committee:")) {
-            raw.committee = normalized.replace("Committee:", "").trim();
-          }
-        });
-      }
-      return raw;
-    },
-    //ultimatley just loading the events, for ex used in refetchEvents()
-    eventsSet(events) {
-      //sending info so it can be used for the cards
-      updateUpcomingCards(events);
+        if (normalized.startsWith("Committee:")) {
+          raw.committee = normalized.replace("Committee:", "").trim();
+        }
+      });
     }
 
-    });
+    return raw;
+  },
+  eventsSet(events) {
+    updateUpcomingCards(events);
+  }
+
+});
 
     calendar.render(); 
 
@@ -127,20 +103,19 @@ function updateUpcomingCards(events) {
 
   // Convert FullCalendar events into a usable list
   const list = events
-    .map(e => {
-      const props = e.extendedProps || {};
-      return {
-        //pulling all info even if not used in cards
-        title: e.title, 
-        start: e.start, 
-        end: e.end, 
+    .map(ev => {
+      const props = ev.extendedProps || {};
+      return { 
+        title: ev.title, 
+        start: ev.start, 
+        end: ev.end, 
         type: props.type || "none", 
         committee: props.committee || "none", 
         location: props.location || "", 
         description: props.description || "" 
       };
     })
-    .filter(e => {
+    .filter(ev => {
       const typeMatch =
         activeFilters.type === "all" || activeFilters.type === ev.type;
 
@@ -152,13 +127,13 @@ function updateUpcomingCards(events) {
     .sort((a, b) => a.start - b.start); // soonest first
 
   // Render cards
-  list.forEach(e => { 
+  list.forEach(ev => { 
     const card = document.createElement("div"); 
     card.className = "event-card"; 
     card.innerHTML = ` 
-    <h2 class="event-title">${e.title}</h2> 
-    <p class="event-date">${e.start.toLocaleDateString()}</p> 
-    <p class="event-location">${e.location}</p> 
+    <h2 class="event-title">${ev.title}</h2> 
+    <p class="event-date">${ev.start.toLocaleDateString()}</p> 
+    <p class="event-location">${ev.location}</p> 
     <button class="event-btn">View Details</button> 
     `; 
     container.appendChild(card); 
