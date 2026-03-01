@@ -9,153 +9,264 @@ menu.addEventListener('click', function() {
 })
 */
 
+const API_KEY = "AIzaSyBWXY7wclp0Gfw4cQY1CCRaY530LrcRUqg"; 
+
+const activeFilters = { 
+  type: "all", 
+  committee: "all" 
+};
 
 //test calender: googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com'
 //real calendar: googleCalendarId: 'dfac00fa816c1db1e9e3363bb1ee8af7159ba8ee4c6eb711ae21d3f7eef8dde0@group.calendar.google.com' 
 
-//adding the actual calendar 
-const API_KEY = "AIzaSyBWXY7wclp0Gfw4cQY1CCRaY530LrcRUqg"; 
-
-//making the filters actually filter through the events
-const activeFilters = {
-  type: "all",
-  committee: "all"
-};
-
-//button listeners, so each button is linked to an action
 document.addEventListener('DOMContentLoaded', function () { 
   const calendarEl = document.getElementById('club-calendar'); 
+  const calendar = new FullCalendar.Calendar(
+    calendarEl, { 
+      initialView: 'dayGridMonth', 
+      googleCalendarApiKey: API_KEY, 
+      events: { 
+        googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com' 
+      }, headerToolbar: { 
+        left: 'prev,next today', 
+        center: 'title', 
+        right: 'dayGridMonth,timeGridWeek,timeGridDay' 
+      }, 
 
-const calendar = new FullCalendar.Calendar(calendarEl, { 
-  initialView: 'dayGridMonth', 
-  googleCalendarApiKey: API_KEY,
+      eventDidMount(info) { 
+        const eventType = info.event.extendedProps.type || "none"; 
+        const eventCommittee = info.event.extendedProps.committee || "none"; 
+        
+        const typeMatch = activeFilters.type === "all" || activeFilters.type === eventType; 
+        const committeeMatch = activeFilters.committee === "all" || activeFilters.committee === eventCommittee; 
+        
+        if (!typeMatch || !committeeMatch) { 
+          info.el.style.display = "none"; 
+        } 
+      }, 
 
-  events: { 
-    googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com'
-  },
+      eventDataTransform(raw) { 
+        if (raw.description) { 
+          let clean = raw.description 
+          .replace(/<\/?pre>/gi, "") 
+          .replace(/<br[^>]*>/gi, "\n") 
+          .replace(/\r/g, "") .trim(); 
 
-  headerToolbar: { 
-    left: 'prev,next today', 
-    center: 'title', 
-    right: 'dayGridMonth,timeGridWeek,timeGridDay' 
-  },
+          const lines = clean.split("\n"); 
+          
+          let type = "none"; 
+          let committee = "none"; 
+          lines.forEach(line => { 
+            let normalized = line.trim() 
+            .replace(/\u200B/g, "") 
+            .replace(/\uFEFF/g, "") 
+            .replace(/\u00A0/g, " "); 
+            
+            if (normalized.startsWith("Type:")) { 
+              type = normalized.replace("Type:", "").trim(); 
+            } 
+            if (normalized.startsWith("Committee:")) { 
+              committee = normalized.replace("Committee:", "").trim(); 
+            } 
+          }); 
+          
+          raw.extendedProps = { 
+            ...raw.extendedProps, type, committee 
+          }; 
+        } 
+        return raw; 
+      }, 
+      
+      eventsSet(events) { 
+        updateUpcomingCards(events); 
+      }, 
 
-  //needed to use AI here, was very lost on why it wasn't parsing correctly
-  // apparently lots of hidden characters and wierd spaccing issues
-  eventDidMount(info) {
-    const eventType = info.event.extendedProps.type || "none";
-    const eventCommittee = info.event.extendedProps.committee || "none";
-
-    const typeMatch =
-      activeFilters.type === "all" || activeFilters.type === eventType;
-
-    const committeeMatch =
-      activeFilters.committee === "all" || activeFilters.committee === eventCommittee;
-
-    if (!typeMatch || !committeeMatch) {
-      info.el.style.display = "none";
-    }
-  },
-    eventDataTransform(raw) {
-    if (raw.description) {
-      let clean = raw.description
-        .replace(/<\/?pre>/gi, "")
-        .replace(/<br[^>]*>/gi, "\n")
-        .replace(/\r/g, "")
-        .trim();
-
-      const lines = clean.split("\n");
-
-      lines.forEach(line => {
-        let normalized = line.trim()
-          .replace(/\u200B/g, "")
-          .replace(/\uFEFF/g, "")
-          .replace(/\u00A0/g, " ");
-
-        if (normalized.startsWith("Type:")) {
-          raw.type = normalized.replace("Type:", "").trim();
-        }
-
-        if (normalized.startsWith("Committee:")) {
-          raw.committee = normalized.replace("Committee:", "").trim();
-        }
-      });
-    }
-
-    return raw;
-  },
-  eventsSet(events) {
-    updateUpcomingCards(events);
-  }
-
-});
-
+      eventClick(info) { 
+        info.jsEvent.preventDefault(); 
+        
+        const modalOverlay = document.getElementById("modal-overlay"); 
+        const modalTitle = document.querySelector("#event-modal .event-title"); 
+        const modalDate = document.querySelector("#event-modal .event-data"); 
+        const modalLocation = document.querySelector("#event-modal .event-location"); 
+        modalTitle.textContent = info.event.title; 
+        modalDate.textContent = "Date: " + info.event.start.toLocaleString(); 
+        modalLocation.textContent = "Location: " + (info.event.extendedProps.location || "TBD"); 
+        modalOverlay.style.display = "flex"; modalOverlay.setAttribute("aria-hidden", "false"); 
+      } 
+    }); 
+    
     calendar.render(); 
-
-    //save globablly for filters to reorganize and resrot events
-    window.clubCalendar = calendar;
+    
+    window.clubCalendar = calendar; 
   }); 
   
-function updateUpcomingCards(events) {
-  const container = document.getElementById("events-grid");
-
-  container.innerHTML = ""; // clear old cards
-
-  // Convert FullCalendar events into a usable list
-  const list = events
-    .map(ev => {
-      const props = ev.extendedProps || {};
+  function updateUpcomingCards(events) { 
+    const container = document.getElementById("events-grid"); 
+    container.innerHTML = ""; 
+    const list = events .map(ev => { 
+      const props = ev.extendedProps || {}; 
       return { 
         title: ev.title, 
         start: ev.start, 
-        end: ev.end, 
-        type: props.type || "none", 
+        end: ev.end, type: props.type || "none", 
         committee: props.committee || "none", 
         location: props.location || "", 
         description: props.description || "" 
-      };
-    })
-    .filter(ev => {
-      const typeMatch =
-        activeFilters.type === "all" || activeFilters.type === ev.type;
+      }; 
+    }) .filter(ev => { 
+      const typeMatch = activeFilters.type === "all" || activeFilters.type === ev.type; 
+      const committeeMatch = activeFilters.committee === "all" || activeFilters.committee === ev.committee; 
+      return typeMatch && committeeMatch; 
+    }) .sort((a, b) => a.start - b.start); 
+    
+    list.forEach(ev => { 
+      const card = document.createElement("div"); 
+      card.className = "event-card"; 
+      card.innerHTML = ` 
+      <h2 class="event-title">${ev.title}</h2> 
+      <p class="event-date">${ev.start.toLocaleDateString()}</p> 
+      <p class="event-location">${ev.location}</p> 
+      <button class="event-btn">View Details</button> 
+      `; 
+      
+      container.appendChild(card); 
+    }); 
+  }
 
-      const committeeMatch =
-        activeFilters.committee === "all" || activeFilters.committee === ev.committee;
+//button listeners, so each button is linked to an action
+// document.addEventListener('DOMContentLoaded', function () { 
+//   const calendarEl = document.getElementById('club-calendar'); 
 
-      return typeMatch && committeeMatch;
-    })
-    .sort((a, b) => a.start - b.start); // soonest first
+// const calendar = new FullCalendar.Calendar(calendarEl, { 
+//   initialView: 'dayGridMonth', 
+//   googleCalendarApiKey: API_KEY,
 
-  // Render cards
-  list.forEach(ev => { 
-    const card = document.createElement("div"); 
-    card.className = "event-card"; 
-    card.innerHTML = ` 
-    <h2 class="event-title">${ev.title}</h2> 
-    <p class="event-date">${ev.start.toLocaleDateString()}</p> 
-    <p class="event-location">${ev.location}</p> 
-    <button class="event-btn">View Details</button> 
-    `; 
-    container.appendChild(card); 
-  });
-}
+//   events: { 
+//     googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com'
+//   },
+
+//   headerToolbar: { 
+//     left: 'prev,next today', 
+//     center: 'title', 
+//     right: 'dayGridMonth,timeGridWeek,timeGridDay' 
+//   },
+
+//   //needed to use AI here, was very lost on why it wasn't parsing correctly
+//   // apparently lots of hidden characters and wierd spaccing issues
+//   eventDidMount(info) {
+//     const eventType = info.event.extendedProps.type || "none";
+//     const eventCommittee = info.event.extendedProps.committee || "none";
+
+//     const typeMatch =
+//       activeFilters.type === "all" || activeFilters.type === eventType;
+
+//     const committeeMatch =
+//       activeFilters.committee === "all" || activeFilters.committee === eventCommittee;
+
+//     if (!typeMatch || !committeeMatch) {
+//       info.el.style.display = "none";
+//     }
+//   },
+//     eventDataTransform(raw) {
+//     if (raw.description) {
+//       let clean = raw.description
+//         .replace(/<\/?pre>/gi, "")
+//         .replace(/<br[^>]*>/gi, "\n")
+//         .replace(/\r/g, "")
+//         .trim();
+
+//       const lines = clean.split("\n");
+
+//       lines.forEach(line => {
+//         let normalized = line.trim()
+//           .replace(/\u200B/g, "")
+//           .replace(/\uFEFF/g, "")
+//           .replace(/\u00A0/g, " ");
+
+//         if (normalized.startsWith("Type:")) {
+//           raw.type = normalized.replace("Type:", "").trim();
+//         }
+
+//         if (normalized.startsWith("Committee:")) {
+//           raw.committee = normalized.replace("Committee:", "").trim();
+//         }
+//       });
+//     }
+
+//     return raw;
+//   },
+//   eventsSet(events) {
+//     updateUpcomingCards(events);
+//   }
+
+// });
+
+//     calendar.render(); 
+
+//     //save globablly for filters to reorganize and resrot events
+//     window.clubCalendar = calendar;
+//   }); 
+  
+// function updateUpcomingCards(events) {
+//   const container = document.getElementById("events-grid");
+
+//   container.innerHTML = ""; // clear old cards
+
+//   // Convert FullCalendar events into a usable list
+//   const list = events
+//     .map(ev => {
+//       const props = ev.extendedProps || {};
+//       return { 
+//         title: ev.title, 
+//         start: ev.start, 
+//         end: ev.end, 
+//         type: props.type || "none", 
+//         committee: props.committee || "none", 
+//         location: props.location || "", 
+//         description: props.description || "" 
+//       };
+//     })
+//     .filter(ev => {
+//       const typeMatch =
+//         activeFilters.type === "all" || activeFilters.type === ev.type;
+
+//       const committeeMatch =
+//         activeFilters.committee === "all" || activeFilters.committee === ev.committee;
+
+//       return typeMatch && committeeMatch;
+//     })
+//     .sort((a, b) => a.start - b.start); // soonest first
+
+//   // Render cards
+//   list.forEach(ev => { 
+//     const card = document.createElement("div"); 
+//     card.className = "event-card"; 
+//     card.innerHTML = ` 
+//     <h2 class="event-title">${ev.title}</h2> 
+//     <p class="event-date">${ev.start.toLocaleDateString()}</p> 
+//     <p class="event-location">${ev.location}</p> 
+//     <button class="event-btn">View Details</button> 
+//     `; 
+//     container.appendChild(card); 
+//   });
+// }
 
 
-async function loadCalendarEvents() { 
-  const response = await gapi.client.calendar.events.list({ 
-    calendarId: "primary", 
-    maxResults: 10, 
-    singleEvents: true, 
-    orderBy: "startTime" 
-  }); 
-  const events = response.result.items; 
-  const container = document.getElementById("calendar"); 
-  container.innerHTML = "<h2>Your Upcoming Events</h2>"; 
-  events.forEach(event => { 
-    const start = event.start.dateTime || event.start.date; 
-    container.innerHTML += `<p>${start} — ${event.summary}</p>`; 
-  }); 
-}
+// async function loadCalendarEvents() { 
+//   const response = await gapi.client.calendar.events.list({ 
+//     calendarId: "primary", 
+//     maxResults: 10, 
+//     singleEvents: true, 
+//     orderBy: "startTime" 
+//   }); 
+//   const events = response.result.items; 
+//   const container = document.getElementById("calendar"); 
+//   container.innerHTML = "<h2>Your Upcoming Events</h2>"; 
+//   events.forEach(event => { 
+//     const start = event.start.dateTime || event.start.date; 
+//     container.innerHTML += `<p>${start} — ${event.summary}</p>`; 
+//   }); 
+// }
 
 // //added to dynamically fill in upcoming events section
 // fetch('https://api.sheetbest.com/sheets/96fd77ef-7967-42e7-994f-dfbae7a94e47')
