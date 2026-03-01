@@ -36,16 +36,16 @@
 
                     <!--mobile menu toggle button-->
                     <!--previously div, now button to ensure interactiveness-->
-                    <button class="navbar__toggle" id="mobile-menu"  aria-controls="navbar__menu" aria-expanded="false" aria-label="Toggle navigation">
+                    <div class="navbar__toggle" id="mobile-menu"  aria-controls="navbar__menu" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="bar bar1"></span>
                         <span class="bar bar2"></span>
                         <span class="bar bar3"></span>
                         <div class="flower-center"></div>
                         <!--visual elems for the hamburger menu and decorative center-->
-                    </button>
+                    </div>
 
                     <!--ul = unordered list, used as numbering/lettering not required-->
-                    <ul class="navbar__menu">
+                    <ul class="navbar__menu" id="navbar__menu">
                         <!--tabindex="0" make link keyboard accesible w/ tab-->
 
                         <!--navigation link to homepage-->
@@ -73,71 +73,67 @@
         
         <main>
             <!--container for upcoming events-->
-            <div class = "upcoming-container">
-                <!--heading will appear on the left-->
-                <div class = "left-head">
-                    <h1>Upcoming Events</h1>
+            <section class="upcoming-container">
+                <h1 class="section-title">Upcoming Events</h1>
+
+                <div class="events-grid" id="events-grid">
+
+                    <div class="event-card">
+                        <h2 class="event-title">Women in Statistics Meeting</h2>
+                        <p class="event-date">March 10, 2026</p>
+                        <p class="event-location">Illini Union</p>
+                        <button class="event-btn">View Details</button>
+                    </div>
+
+                    <div class="event-card">
+                        <h2 class="event-title">Research Workshop</h2>
+                        <p class="event-date">March 18, 2026</p>
+                        <p class="event-location">Siebel Center</p>
+                        <button class="event-btn">View Details</button>
+                    </div>
+
+                    <div class="event-card">
+                        <h2 class="event-title">Networking Night</h2>
+                        <p class="event-date">March 25, 2026</p>
+                        <p class="event-location">CIF</p>
+                        <button class="event-btn">View Details</button>
+                    </div>
+
                 </div>
-                <!--list of events on the right-->
-                <div class = "right-head">
-                    <ul class = "right-thing" role="list">
-                        <!--each list element is an event-->
-                        <!-- <li role="listitem">
-                            <div class = "event-sub" tabindex="0" role="button">
-                                <span class="event-title">Women in Statistics Meeting</span>
-                                <span class="event-data">Date: XX/XX</span>
-                                <span class="event-location">Location: Illini Union</span>
-                            </div>
-                        </li>
-                        <li role="listitem">
-                            <div class = "event-sub" tabindex="0" role="button">
-                                <span class="event-title">Women in Statistics Meeting</span>
-                                <span class="event-data">Date: XX/XX</span>
-                                <span class="event-location">Location: Illini Union</span>
-                            </div>
-                        </li>
-                        <li role="listitem" >
-                            <div class = "event-sub" tabindex="0" role="button">
-                                <span class="event-title">Women in Statistics Meeting</span>
-                                <span class="event-data">Date: XX/XX</span>
-                                <span class="event-location">Location: Illini Union</span>
-                            </div>
-                        </li> -->
-                        <!--removed in order to be dynamically filled in-->
-                    </ul>
-                </div>
-            </div>
+            </section>
+            
 
             <!--ceating a break into new section-->
             <hr></hr>
 
-            
 
+            <div class = "filters">
+                <div class = "dropdown">
+                <button>Type</button>
+                <div class = "content">
+                    <a>A</a>
+                    <a>B</a>
+                    <a>C</a>
+                </div>
+                </div>
+                <div class = "dropdown">
+                    <button>Committe</button>
+                    <div class = "content">
+                        <a>Research</a>
+                        <a>Web Design</a>
+                        <a>Newsletter</a>
+                        <a>Social Media</a>
+                    </div>
+                </div>
+                <div>
+                    <button>Misc</button>
+                </div>
+            </div>
 
             <!--container for calendar-->
             <div class = "calendar">
-
                  <!-- Google Calendar Events Will Appear Here -->
                 <div id="club-calendar"></div>
-
-                <section id="filters" aria-label="Filter events">
-                    <div class = "calendar-filters">
-                        <h2>Filters</h2>
-                        <!--checkboxes for filters-->
-                        <div class="checkbox-wrapper-13">
-                            <input id="filter-a" type="checkbox">
-                            <label for="filter-a">Filter 1 - A</label>
-                        </div>
-                        <div class="checkbox-wrapper-13">
-                            <input id="filter-b" type="checkbox">
-                            <label for="filter-b">Filter 2 - B</label>
-                        </div>
-                        <div class="checkbox-wrapper-13">
-                            <input id="filter-c" type="checkbox">
-                            <label for="filter-c">Filter 3 - C</label>
-                        </div>
-                    </div>
-                </section>
             </div>
         </main>
 
