@@ -8,86 +8,319 @@ menu.addEventListener('click', function() {
     menuLinks.classList.toggle('active');
 })
 */
-//adding the actual calendar 
+
 const API_KEY = "AIzaSyBWXY7wclp0Gfw4cQY1CCRaY530LrcRUqg"; 
+
+const activeFilters = { 
+  type: "all", 
+  committee: "all" 
+};
+
+//test calender: googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com'
+//real calendar: googleCalendarId: 'dfac00fa816c1db1e9e3363bb1ee8af7159ba8ee4c6eb711ae21d3f7eef8dde0@group.calendar.google.com' 
+
 document.addEventListener('DOMContentLoaded', function () { 
   const calendarEl = document.getElementById('club-calendar'); 
-  const calendar = new FullCalendar.Calendar(calendarEl, { 
-    initialView: 'dayGridMonth', 
-    googleCalendarApiKey: 'AIzaSyBWXY7wclp0Gfw4cQY1CCRaY530LrcRUqg', 
-    events: { googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com' }, 
-    headerToolbar: { 
-      left: 'prev,next today', 
-      center: 'title', 
-      right: 'dayGridMonth,timeGridWeek,timeGridDay' 
-    },
-    eventClick: function(info) {
-      info.jsEvent.preventDefault(); // prevents it from going to gcal
-      const modalOverlay = document.getElementById("modal-overlay");
-      const modalTitle = document.querySelector("#event-modal .event-title");
-      const modalDate = document.querySelector("#event-modal .event-data");
-      const modalLocation = document.querySelector("#event-modal .event-location"); // getting modal elements
-      modalTitle.textContent = info.event.title;
-      modalDate.textContent = "Date: " + info.event.start.toLocaleString();
-      modalLocation.textContent = "Location: " + (info.event.extendedProps.location || "TBD"); // show event location, tbd if not available
-      modalOverlay.style.display = "flex";
-      modalOverlay.setAttribute("aria-hidden", "false");
-    }
+  const calendar = new FullCalendar.Calendar(
+    calendarEl, { 
+      initialView: 'dayGridMonth', 
+      googleCalendarApiKey: API_KEY, 
+      events: { 
+        googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com' 
+      }, headerToolbar: { 
+        left: 'prev,next today', 
+        center: 'title', 
+        right: 'dayGridMonth,timeGridWeek,timeGridDay' 
+      }, 
 
-    }); calendar.render(); }); 
-    // 
-async function loadCalendarEvents() { 
-  const response = await gapi.client.calendar.events.list({ 
-    calendarId: "primary", 
-    maxResults: 10, 
-    singleEvents: true, 
-    orderBy: "startTime" 
-  }); 
-  const events = response.result.items; 
-  const container = document.getElementById("calendar"); 
-  container.innerHTML = "<h2>Your Upcoming Events</h2>"; 
-  events.forEach(event => { 
-    const start = event.start.dateTime || event.start.date; 
-    container.innerHTML += `<p>${start} — ${event.summary}</p>`; 
-  }); 
-}
+      eventDidMount(info) { 
+        const eventType = info.event.extendedProps.type || "none"; 
+        const eventCommittee = info.event.extendedProps.committee || "none"; 
+        
+        const typeMatch = activeFilters.type === "all" || activeFilters.type === eventType; 
+        const committeeMatch = activeFilters.committee === "all" || activeFilters.committee === eventCommittee; 
+        
+        if (!typeMatch || !committeeMatch) { 
+          info.el.style.display = "none"; 
+        } 
+      }, 
 
-//added to dynamically fill in upcoming events section
-fetch('https://api.sheetbest.com/sheets/96fd77ef-7967-42e7-994f-dfbae7a94e47')
-.then(response => response.json())
-.then(data => {
-    const upcomingList = document.querySelector(".right-thing");
-    upcomingList.innerHTML = " ";
+      eventDataTransform(raw) { 
+        if (raw.description) { 
+          let clean = raw.description 
+          .replace(/<\/?pre>/gi, "") 
+          .replace(/<br[^>]*>/gi, "\n") 
+          .replace(/\r/g, "") .trim(); 
+
+          const lines = clean.split("\n"); 
+          
+          let type = "none"; 
+          let committee = "none"; 
+          lines.forEach(line => { 
+            let normalized = line.trim() 
+            .replace(/\u200B/g, "") 
+            .replace(/\uFEFF/g, "") 
+            .replace(/\u00A0/g, " "); 
+            
+            if (normalized.startsWith("Type:")) { 
+              type = normalized.replace("Type:", "").trim(); 
+            } 
+            if (normalized.startsWith("Committee:")) { 
+              committee = normalized.replace("Committee:", "").trim(); 
+            } 
+          }); 
+          
+          raw.extendedProps = { 
+            ...raw.extendedProps, type, committee 
+          }; 
+        } 
+        return raw; 
+      }, 
+      
+      eventsSet(events) { 
+        updateUpcomingCards(events); 
+      }, 
+
+      eventClick(info) { 
+        info.jsEvent.preventDefault(); 
+        
+        const modalOverlay = document.getElementById("modal-overlay"); 
+        const modalTitle = document.querySelector("#event-modal .event-title"); 
+        const modalDate = document.querySelector("#event-modal .event-data"); 
+        const modalLocation = document.querySelector("#event-modal .event-location"); 
+        modalTitle.textContent = info.event.title; 
+        modalDate.textContent = "Date: " + info.event.start.toLocaleString(); 
+        modalLocation.textContent = "Location: " + (info.event.extendedProps.location || "TBD"); 
+        modalOverlay.style.display = "flex"; modalOverlay.setAttribute("aria-hidden", "false"); 
+      } 
+    }); 
     
-    //pulling first 3 events
-    const topEvents = data.slice(0, 3);
+    calendar.render(); 
+    
+    window.clubCalendar = calendar; 
+    //never attached listener for close on modal
+    attachModalListener();
+  }); 
 
-    topEvents.forEach(event => {
-      const li = document.createElement("li");
-      li.setAttribute("role", "listitem");
+  document.querySelectorAll(".filter-option").forEach(btn => { 
+    btn.addEventListener("click", () => { 
+      const group = btn.dataset.filterGroup; 
+      // "type" or "committee" 
+      const value = btn.dataset.filterVal; 
+      // e.g. "General", "Research", "all" 
+      // // Update active filters 
+      activeFilters[group] = value; 
+      
+      console.log("Updated filters:", activeFilters); 
+      // Re-render calendar events 
+      window.clubCalendar.refetchEvents(); 
+    }); 
+  });
+  
+  function updateUpcomingCards(events) { 
+    const container = document.getElementById("events-grid"); 
+    container.innerHTML = ""; 
+    const list = events .map(ev => { 
+      const props = ev.extendedProps || {}; 
+      return { 
+        title: ev.title, 
+        start: ev.start, 
+        end: ev.end, type: props.type || "none", 
+        committee: props.committee || "none", 
+        location: props.location || "", 
+        description: props.description || "" 
+      }; 
+    }) .filter(ev => { 
+      const typeMatch = activeFilters.type === "all" || activeFilters.type === ev.type; 
+      const committeeMatch = activeFilters.committee === "all" || activeFilters.committee === ev.committee; 
+      return typeMatch && committeeMatch; 
+    }) .sort((a, b) => a.start - b.start); 
+    
+    list.forEach(ev => { 
+      const card = document.createElement("div"); 
+      card.className = "event-card"; 
+      card.innerHTML = ` 
+      <h2 class="event-title">${ev.title}</h2> 
+      <p class="event-date">${ev.start.toLocaleDateString()}</p> 
+      <p class="event-location">${ev.location}</p> 
+      <button class="event-btn">View Details</button> 
+      `; 
+      
+      container.appendChild(card); 
+    }); 
+  }
 
-      li.innerHTML = `
-        <div class="event-sub" tabindex="0" role="button">
-            <span class="event-title">${event.name}</span>
-            <span class="event-data">Date: ${event.date}</span>
-            <span class="event-location">Location: ${event.location}</span>
-        </div>
-      `;
+//button listeners, so each button is linked to an action
+// document.addEventListener('DOMContentLoaded', function () { 
+//   const calendarEl = document.getElementById('club-calendar'); 
 
-      // ARIA additions
-      const eventSub = li.querySelector(".event-sub");
-      eventSub.setAttribute("aria-haspopup", "dialog");
-      eventSub.setAttribute("aria-controls", "modal-overlay");
-      eventSub.setAttribute(
-        "aria-label",
-        `${event.name}, happening on ${event.date} at ${event.location}`
-      );
+// const calendar = new FullCalendar.Calendar(calendarEl, { 
+//   initialView: 'dayGridMonth', 
+//   googleCalendarApiKey: API_KEY,
 
-      upcomingList.appendChild(li);
-});
-attachModalListener();
+//   events: { 
+//     googleCalendarId: 'ed1a0dc749cd8f5be31fe2e72606fe5a46321f3e0c8671f0361c504d19fd2f38@group.calendar.google.com'
+//   },
 
-})
+//   headerToolbar: { 
+//     left: 'prev,next today', 
+//     center: 'title', 
+//     right: 'dayGridMonth,timeGridWeek,timeGridDay' 
+//   },
+
+//   //needed to use AI here, was very lost on why it wasn't parsing correctly
+//   // apparently lots of hidden characters and wierd spaccing issues
+//   eventDidMount(info) {
+//     const eventType = info.event.extendedProps.type || "none";
+//     const eventCommittee = info.event.extendedProps.committee || "none";
+
+//     const typeMatch =
+//       activeFilters.type === "all" || activeFilters.type === eventType;
+
+//     const committeeMatch =
+//       activeFilters.committee === "all" || activeFilters.committee === eventCommittee;
+
+//     if (!typeMatch || !committeeMatch) {
+//       info.el.style.display = "none";
+//     }
+//   },
+//     eventDataTransform(raw) {
+//     if (raw.description) {
+//       let clean = raw.description
+//         .replace(/<\/?pre>/gi, "")
+//         .replace(/<br[^>]*>/gi, "\n")
+//         .replace(/\r/g, "")
+//         .trim();
+
+//       const lines = clean.split("\n");
+
+//       lines.forEach(line => {
+//         let normalized = line.trim()
+//           .replace(/\u200B/g, "")
+//           .replace(/\uFEFF/g, "")
+//           .replace(/\u00A0/g, " ");
+
+//         if (normalized.startsWith("Type:")) {
+//           raw.type = normalized.replace("Type:", "").trim();
+//         }
+
+//         if (normalized.startsWith("Committee:")) {
+//           raw.committee = normalized.replace("Committee:", "").trim();
+//         }
+//       });
+//     }
+
+//     return raw;
+//   },
+//   eventsSet(events) {
+//     updateUpcomingCards(events);
+//   }
+
+// });
+
+//     calendar.render(); 
+
+//     //save globablly for filters to reorganize and resrot events
+//     window.clubCalendar = calendar;
+//   }); 
+  
+// function updateUpcomingCards(events) {
+//   const container = document.getElementById("events-grid");
+
+//   container.innerHTML = ""; // clear old cards
+
+//   // Convert FullCalendar events into a usable list
+//   const list = events
+//     .map(ev => {
+//       const props = ev.extendedProps || {};
+//       return { 
+//         title: ev.title, 
+//         start: ev.start, 
+//         end: ev.end, 
+//         type: props.type || "none", 
+//         committee: props.committee || "none", 
+//         location: props.location || "", 
+//         description: props.description || "" 
+//       };
+//     })
+//     .filter(ev => {
+//       const typeMatch =
+//         activeFilters.type === "all" || activeFilters.type === ev.type;
+
+//       const committeeMatch =
+//         activeFilters.committee === "all" || activeFilters.committee === ev.committee;
+
+//       return typeMatch && committeeMatch;
+//     })
+//     .sort((a, b) => a.start - b.start); // soonest first
+
+//   // Render cards
+//   list.forEach(ev => { 
+//     const card = document.createElement("div"); 
+//     card.className = "event-card"; 
+//     card.innerHTML = ` 
+//     <h2 class="event-title">${ev.title}</h2> 
+//     <p class="event-date">${ev.start.toLocaleDateString()}</p> 
+//     <p class="event-location">${ev.location}</p> 
+//     <button class="event-btn">View Details</button> 
+//     `; 
+//     container.appendChild(card); 
+//   });
+// }
+
+
+// async function loadCalendarEvents() { 
+//   const response = await gapi.client.calendar.events.list({ 
+//     calendarId: "primary", 
+//     maxResults: 10, 
+//     singleEvents: true, 
+//     orderBy: "startTime" 
+//   }); 
+//   const events = response.result.items; 
+//   const container = document.getElementById("calendar"); 
+//   container.innerHTML = "<h2>Your Upcoming Events</h2>"; 
+//   events.forEach(event => { 
+//     const start = event.start.dateTime || event.start.date; 
+//     container.innerHTML += `<p>${start} — ${event.summary}</p>`; 
+//   }); 
+// }
+
+// //added to dynamically fill in upcoming events section
+// fetch('https://api.sheetbest.com/sheets/96fd77ef-7967-42e7-994f-dfbae7a94e47')
+// .then(response => response.json())
+// .then(data => {
+//     const upcomingList = document.querySelector(".right-thing");
+//     upcomingList.innerHTML = " ";
+    
+//     //pulling first 3 events
+//     const topEvents = data.slice(0, 3);
+
+//     topEvents.forEach(event => {
+//       const li = document.createElement("li");
+//       li.setAttribute("role", "listitem");
+
+//       li.innerHTML = `
+//         <div class="event-sub" tabindex="0" role="button">
+//             <span class="event-title">${event.name}</span>
+//             <span class="event-data">Date: ${event.date}</span>
+//             <span class="event-location">Location: ${event.location}</span>
+//         </div>
+//       `;
+
+//       // ARIA additions
+//       const eventSub = li.querySelector(".event-sub");
+//       eventSub.setAttribute("aria-haspopup", "dialog");
+//       eventSub.setAttribute("aria-controls", "modal-overlay");
+//       eventSub.setAttribute(
+//         "aria-label",
+//         `${event.name}, happening on ${event.date} at ${event.location}`
+//       );
+
+//       upcomingList.appendChild(li);
+// });
+// attachModalListener();
+
+// })
 
 
 function attachModalListener() {
@@ -119,12 +352,17 @@ function attachModalListener() {
   });
 
   closeBtn.addEventListener("click", () => {
+    //warning on console about focused opbj hidden, added following line to fix
+    document.body.focus;
+
     modalOverlay.style.display = "none";
     modalOverlay.setAttribute("aria-hidden", "true");
   });
   
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") {
+      document.body.focus;
+
       modalOverlay.style.display = "none";
       modalOverlay.setAttribute("aria-hidden", "true");
     }
@@ -132,6 +370,7 @@ function attachModalListener() {
 
   modalOverlay.addEventListener("click", e => {
     if (e.target === modalOverlay) {
+      document.body.focus;
       modalOverlay.style.display = "none";
       modalOverlay.setAttribute("aria-hidden", "true");
     }
