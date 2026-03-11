@@ -913,6 +913,8 @@ body {
     max-width: 1200px;
     margin: 2rem auto 0 auto;
     padding: 0 2rem;
+
+    min-height:  180px;
 }
 
 /* Card styling */
@@ -928,6 +930,12 @@ body {
     flex-direction: column;
     gap: 0.5rem;
 }
+
+.no-events {
+  text-align: center;
+  padding: 20px;
+}
+
 
 .event-card:hover { 
     transform: scale(1.05); 
