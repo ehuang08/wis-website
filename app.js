@@ -1,3 +1,32 @@
+document.addEventListener("DOMContentLoaded", () => { //moved inside, as was breaking events page logic
+  var swiper = new Swiper('.swiper', {
+  loop: true,
+  grabCursor: true,
+  
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
+    dynamicBullets:true,
+  },
+
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+
+  breakpoints: {
+    0: {
+      slidesPerView: 1
+    },
+    620: {
+      slidesPerView: 2
+    }, 
+    1024: {
+      slidesPerView: 3
+    }
+  }
+});
+});
 
 /*
 const menu = document.querySelector('#mobile-menu');
@@ -120,6 +149,9 @@ document.addEventListener('DOMContentLoaded', function () {
   function updateUpcomingCards(events) { 
     const container = document.getElementById("events-grid"); 
     container.innerHTML = ""; 
+
+    const now = new Date(); //gets curr data and time
+
     const list = events .map(ev => { 
       const props = ev.extendedProps || {}; 
       return { 
@@ -130,11 +162,24 @@ document.addEventListener('DOMContentLoaded', function () {
         location: props.location || "", 
         description: props.description || "" 
       }; 
-    }) .filter(ev => { 
+    }) .filter(ev => ev.start >= now)
+    .filter(ev => { 
       const typeMatch = activeFilters.type === "all" || activeFilters.type === ev.type; 
       const committeeMatch = activeFilters.committee === "all" || activeFilters.committee === ev.committee; 
       return typeMatch && committeeMatch; 
-    }) .sort((a, b) => a.start - b.start); 
+    }) .sort((a, b) => a.start - b.start)
+    .slice(0,3);; 
+
+    if (list.length ===0) { 
+      const card = document.createElement("div"); 
+      card.className = "event-card"; 
+      card.innerHTML = ` 
+      <h2>No Upcoming Events This Month</h2> 
+      <p>There are currenlty no future events scheduled.</p> 
+      `; 
+      container.appendChild(card); 
+      return;
+    }
     
     list.forEach(ev => { 
       const card = document.createElement("div"); 
@@ -148,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
       
       container.appendChild(card); 
     }); 
-  }
+  } 
 
 //button listeners, so each button is linked to an action
 // document.addEventListener('DOMContentLoaded', function () { 
