@@ -532,32 +532,60 @@ body {
     background-color: #f7a96e;
     align-items: center;
     justify-content: center;
-    padding:20px;
+    padding: 20px 20px 40px 20px;
 }
 
-.mems {
-    display:flex;
-    flex-wrap: wrap;
-    margin:auto;
-    align-items: center;
-    justify-content: center;
+.board h1 {
+    margin-bottom: 10px;
 }
 
 .pers img {
-    width: 100px;
-    height:100px;
+    width: 150px;
+    height:150px;
 }
 
 .pers {
     text-align:center;
-    padding: 20px;
+    padding: 10px;
 
+}
+
+.pers p {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: larger;
 }
 
 .board h1 {
     text-align: center;
     color: #6c0255;
     margin-top:3rem;
+}
+
+.swiper {
+  width: 90%;
+  height: 350px;
+}
+
+
+:root {  
+  --swiper-navigation-size: 28px;
+}
+
+.swiper .swiper-pagination-bullet {  
+  width: 15px;  
+  height: 15px;  
+  background: #6c0255;  
+}
+.swiper-pagination-bullet-active {  
+	background-color: #000;
+}
+.swiper-pagination-bullet:focus-visible {  
+  outline: -webkit-focus-ring-color auto 1px;  
+  outline-offset: 3px;
+}
+
+.swiper .swiper-slide-button{
+    color: #6c0255;
 }
 
 .sign-up {
@@ -890,6 +918,8 @@ body {
     max-width: 1200px;
     margin: 2rem auto 0 auto;
     padding: 0 2rem;
+
+    min-height:  180px;
 }
 
 /* Card styling */
@@ -905,6 +935,12 @@ body {
     flex-direction: column;
     gap: 0.5rem;
 }
+
+.no-events {
+  text-align: center;
+  padding: 20px;
+}
+
 
 .event-card:hover { 
     transform: scale(1.05); 
@@ -922,3 +958,4 @@ body {
     font-weight: bold;
     cursor: pointer;
 }
+
