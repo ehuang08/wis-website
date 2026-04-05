@@ -581,6 +581,13 @@ span a {
 	align-items: center; */
 }
 
+
+@media only screen and (max-width: 950px) {
+  #far {
+    display: none;
+  }
+}
+
 .avatar {
     position: absolute;
 	width: 100px;
@@ -690,8 +697,7 @@ span a {
 .inp {
     display:block;
     padding: 40px;
-    /*background-color: #d0d0d0b3;*/
-    background-color: rgba(255, 255, 255, 0.2);
+    color:white;
     width: 80%;
     margin:auto;
     align-items: center;
@@ -1048,3 +1054,78 @@ span a {
     cursor: pointer;
 }
 
+.logos {
+    display: flex;
+}
+
+
+.logos img {
+    width: 2vh;
+    height: 2vh;
+    min-width: 60px;
+    min-height:60px;
+    margin-top: 5px;
+    margin-right: -10px;
+    filter: brightness(1.75);
+    z-index: -1;
+    display:none;
+}
+
+@media only screen and (min-width: 952px) {
+  .logos img {
+    display: block;
+  }
+}
+
+.img-carosel {
+    margin: 0 10px 10px 10px;
+    width: 98%;
+    display: flex;
+    overflow-x: auto;
+    z-index: -1;
+    gap: 1vh;
+    align-items: center;
+    border-radius: 10px;
+
+}
+
+.img-carosel::-webkit-scrollbar {
+    display: none;
+}
+
+
+.group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1vh;
+    animation: spin 45s infinite linear;
+
+}
+
+@keyframes spin {
+    from {translate: 0;}
+    to {translate: -100%;}
+}
+
+.card {
+    flex: 0 0 40vh;
+    height: 40vh;
+    padding: 1vh;
+    background: #9b59b6;
+    border-radius: 10px;
+    text-align: center;
+    align-content: center;
+    overflow-x: hidden;
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+
+.card::-webkit-scrollbar {
+    display: none;
+}
