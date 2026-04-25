@@ -1,3 +1,5 @@
+
+
 $(window).on("scroll", function() {
     var holderTop = $(".photo-holder").offset().top;
     var holderHeight = $(".photo-holder").outerHeight();
@@ -19,6 +21,15 @@ $(window).on("scroll", function() {
         } else {
             $(this).removeClass("visible");
         }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const typed = new Typed('#tagline', {
+        strings: ['Hands On Projects', 'Community Building', 'Professional Development'],
+        typeSpeed: 60,
+        backSpeed: 40,
+        loop: true,
     });
 });
 
