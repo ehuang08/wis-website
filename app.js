@@ -1,7 +1,7 @@
 const strings = [
   '"testing testing"',
   '`one` `two` `three`',
-  'Scroll-synced text!'
+  'four five six'
 ];
 
 let currentIndex = -1;
@@ -38,7 +38,6 @@ $(window).on("scroll", function () {
   var sections = $(".sticky section");
   var total = sections.length;
 
-  // sync images
   sections.each(function (i) {
     var start = i / total;
     var end = (i + 1) / total;
@@ -50,7 +49,6 @@ $(window).on("scroll", function () {
     }
   });
 
-  // sync typed text
   var idx = progress < 0.33 ? 0 : progress < 0.66 ? 1 : 2;
   activate(idx);
 });
