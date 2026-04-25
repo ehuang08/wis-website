@@ -1,7 +1,7 @@
 const strings = [
-  '"testing testing"',
-  '`one` `two` `three`',
-  'four five six'
+  'Hands On Projects', 
+  'Community Building', 
+  'Professional Development'
 ];
 
 let currentIndex = -1;
@@ -55,14 +55,6 @@ $(window).on("scroll", function () {
 
 activate(0);
 
-document.addEventListener("DOMContentLoaded", () => {
-    const typed = new Typed('#tagline', {
-        strings: ['Hands On Projects', 'Community Building', 'Professional Development'],
-        typeSpeed: 60,
-        backSpeed: 40,
-        loop: true,
-    });
-});
 
 document.addEventListener("DOMContentLoaded", () => { //moved inside, as was breaking events page logic
   var swiper = new Swiper('.swiper', {
