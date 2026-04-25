@@ -1165,44 +1165,58 @@ span a {
 
 /* Mission Split Section */
 .mission-split {
-    display: flex;
-    flex-direction: row-reverse;
     width: 100%;
-    min-height: 400px;
-}
-.mission-split {
-    flex-direction: row-reverse;
-}
-
-.mission-caption {
-    flex: 1;
-    background-color: #e8d5f0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 40px;
-    color: #2b003f;
-}
-
-.mission-caption h2 {
-    font-family: 'Marcellus', serif;
-    font-size: 2rem;
-    margin-bottom: 16px;
-}
-
-.mission-caption p {
-    font-size: 1rem;
-    line-height: 1.6;
+    /* remove display: flex and height from here */
 }
 
 .photo-holder {
-    flex: 1.5;
-    overflow: hidden;
+    height: 300vh;
 }
 
-.photo-holder img {
+.sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex; /* flex goes here instead */
+    flex-direction: row;
+    align-items: center;
+}
+
+.sticky-text {
+    width: 40%;
+    padding: 2rem;
+}
+
+.sticky-images {
+    position: relative;
+    width: 60%;
+    height: 100%;
+}
+
+.sticky-images section {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    display: block;
+    opacity: 0;
+    transition: opacity 1s;
+    background-size: cover;
+    background-position: center;
+}
+
+.sticky-images section.visible {
+    opacity: 1;
+}
+
+.first {
+    background-image: url("images/placeholder.jpg");
+}
+
+.second {
+    background-image: url("images/statflty.png");
+}
+
+.third {
+    background-image: url("images/colorful-four-parts-pie-chart-by-Vexels.png");
 }

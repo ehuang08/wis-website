@@ -1,3 +1,27 @@
+$(window).on("scroll", function() {
+    var holderTop = $(".photo-holder").offset().top;
+    var holderHeight = $(".photo-holder").outerHeight();
+    var scrolled = $(window).scrollTop() - holderTop;
+    var progress = scrolled / holderHeight;
+
+    progress = Math.max(0, Math.min(1, progress)); 
+
+    var sections = $(".sticky section");
+    var total = sections.length;
+
+    sections.each(function(i) {
+        var start = i / total;
+        var end = (i + 1) / total;
+        var isLast = i === total - 1;
+
+        if (progress >= start && (progress < end || isLast && progress === 1)) {
+            $(this).addClass("visible");
+        } else {
+            $(this).removeClass("visible");
+        }
+    });
+});
+
 document.addEventListener("DOMContentLoaded", () => { //moved inside, as was breaking events page logic
   var swiper = new Swiper('.swiper', {
   loop: true,
@@ -572,4 +596,5 @@ function trapFocus(element) {
 /*
 
 */
+
 
