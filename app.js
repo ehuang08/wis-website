@@ -1,3 +1,4 @@
+
 $(window).on("scroll", function() {
     var holderTop = $(".photo-holder").offset().top;
     var holderHeight = $(".photo-holder").outerHeight();
@@ -21,6 +22,7 @@ $(window).on("scroll", function() {
         }
     });
 });
+
 
 document.addEventListener("DOMContentLoaded", () => { //moved inside, as was breaking events page logic
   var swiper = new Swiper('.swiper', {

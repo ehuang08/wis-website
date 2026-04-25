@@ -1166,7 +1166,6 @@ span a {
 /* Mission Split Section */
 .mission-split {
     width: 100%;
-    /* remove display: flex and height from here */
 }
 
 .photo-holder {
@@ -1177,7 +1176,7 @@ span a {
     position: sticky;
     top: 0;
     height: 100vh;
-    display: flex; /* flex goes here instead */
+    display: flex; 
     flex-direction: row;
     align-items: center;
 }
