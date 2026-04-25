@@ -1,27 +1,61 @@
+const strings = [
+  '"testing testing"',
+  '`one` `two` `three`',
+  'Scroll-synced text!'
+];
 
-$(window).on("scroll", function() {
-    var holderTop = $(".photo-holder").offset().top;
-    var holderHeight = $(".photo-holder").outerHeight();
-    var scrolled = $(window).scrollTop() - holderTop;
-    var progress = scrolled / holderHeight;
+let currentIndex = -1;
+let typeTimer = null;
 
-    progress = Math.max(0, Math.min(1, progress)); 
+function typeString(str) {
+  clearTimeout(typeTimer);
+  let charIdx = 0;
+  const el = document.getElementById('typed-output');
+  el.innerHTML = '<span class="cursor"></span>';
 
-    var sections = $(".sticky section");
-    var total = sections.length;
+  function step() {
+    charIdx++;
+    el.innerHTML = str.slice(0, charIdx) + '<span class="cursor"></span>';
+    if (charIdx < str.length) typeTimer = setTimeout(step, 55);
+  }
+  typeTimer = setTimeout(step, 120);
+}
 
-    sections.each(function(i) {
-        var start = i / total;
-        var end = (i + 1) / total;
-        var isLast = i === total - 1;
+function activate(idx) {
+  if (idx === currentIndex) return;
+  currentIndex = idx;
+  typeString(strings[idx]);
+}
 
-        if (progress >= start && (progress < end || isLast && progress === 1)) {
-            $(this).addClass("visible");
-        } else {
-            $(this).removeClass("visible");
-        }
-    });
+$(window).on("scroll", function () {
+  var holderTop = $(".photo-holder").offset().top;
+  var holderHeight = $(".photo-holder").outerHeight();
+  var scrolled = $(window).scrollTop() - holderTop;
+  var progress = scrolled / holderHeight;
+
+  progress = Math.max(0, Math.min(1, progress));
+
+  var sections = $(".sticky section");
+  var total = sections.length;
+
+  // sync images
+  sections.each(function (i) {
+    var start = i / total;
+    var end = (i + 1) / total;
+    var isLast = i === total - 1;
+    if (progress >= start && (progress < end || (isLast && progress === 1))) {
+      $(this).addClass("visible");
+    } else {
+      $(this).removeClass("visible");
+    }
+  });
+
+  // sync typed text
+  var idx = progress < 0.33 ? 0 : progress < 0.66 ? 1 : 2;
+  activate(idx);
 });
+
+activate(0);
 
 document.addEventListener("DOMContentLoaded", () => {
     const typed = new Typed('#tagline', {
