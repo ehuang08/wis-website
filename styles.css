@@ -1162,3 +1162,47 @@ span a {
 .card::-webkit-scrollbar {
     display: none;
 }
+
+/* Mission Split Section */
+.mission-split {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    min-height: 400px;
+}
+.mission-split {
+    flex-direction: row-reverse;
+}
+
+.mission-caption {
+    flex: 1;
+    background-color: #e8d5f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px;
+    color: #2b003f;
+}
+
+.mission-caption h2 {
+    font-family: 'Marcellus', serif;
+    font-size: 2rem;
+    margin-bottom: 16px;
+}
+
+.mission-caption p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.photo-holder {
+    flex: 1.5;
+    overflow: hidden;
+}
+
+.photo-holder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
