@@ -23,6 +23,14 @@ $(window).on("scroll", function() {
     });
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const typed = new Typed('#tagline', {
+        strings: ['Hands On Projects', 'Community Building', 'Professional Development'],
+        typeSpeed: 60,
+        backSpeed: 40,
+        loop: true,
+    });
+});
 
 document.addEventListener("DOMContentLoaded", () => { //moved inside, as was breaking events page logic
   var swiper = new Swiper('.swiper', {
